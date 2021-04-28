@@ -74,7 +74,7 @@ using System.Collections;
 		}
 
 		///Get a value from a key as a String
-		public Result<StringView> GetString(String Key)
+		public static Result<StringView> GetString(String Key)
 		{
 			Result<StringView> sucess = .Err;
 			if(mIsInit && mArguments.ContainsKey(Key))
@@ -85,7 +85,7 @@ using System.Collections;
 		}
 
 		///Get a value from a key as a Float
-		public Result<float> GetFloat(String Key)
+		public static Result<float> GetFloat(String Key)
 		{
 			Result<float> sucess = .Err;
 			StringView output;
@@ -115,7 +115,7 @@ using System.Collections;
 
 		
 		///Get a value from a key as a Bool
-		public Result<bool> GetBool(String Key)
+		public static Result<bool> GetBool(String Key)
 		{
 			Result<bool> sucess = .Err;
 			StringView output;
