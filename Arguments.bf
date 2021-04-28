@@ -8,6 +8,7 @@ using System.Collections;
 	
 	Guide:
 		Call FormatArgs with the arguments from main
+		all arguments will ignore casing
 		the object now contains a command member that has the intial command (if no intial command was given it will return "run")
 		GetValueType will return the corresponding type to the key that you supplied
 	*/
