@@ -56,7 +56,10 @@ using System.Collections;
 		}
 
 
-
+		public static StringView GetCommand()
+		{
+			return mCommand;
+		}
 
 	   
 		///Get any Value from a String
