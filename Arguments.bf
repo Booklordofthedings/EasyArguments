@@ -8,71 +8,75 @@ using System.Collections;
 	
 	Guide:
 		Call FormatArgs with the arguments from main
-		the object now contains a command member that has the intial command (if no intial command was given it will return "run")
+		Command now has the corresponding command, if none are specified its "run"
 		GetValueType will return the corresponding type to the key that you supplied
 	*/
 
 	class Arguments
 	{
-		public String command;
-		private Dictionary<String,String> arguments;
-		private static bool isInit = false;
-		private this(String com)
-		{
-			command = com;
-		}
-				
 
-		public static Arguments FormatArgs(String[] args)
+		//Members shouldnt be directly acesssed, and instead should be
+		private	static StringView mCommand = "run";
+		private static Dictionary<StringView,StringView> mArguments = new .() ~ delete _; //Shorthand initialization and destructor
+		private static bool mIsInit = false;
+
+
+		public static void FormatArgs(String[] args)
 		{
+
+			//Return if the arguments are closed
 			if(args.IsEmpty)
 			{
-				return new Arguments("run");
+				return;
 			}
-			int count = 0;
-			Arguments output = new Arguments("run");
 
-			for(int i = 0;i < args.Count;i++)
+			//Loop through the arguments
+			for(int i = 0;i < args.Count; i++)
 			{
-				args[i].ToLower();
-				if(!args[i].StartsWith("--") && output.command != "run")
+				args[i].ToLower(); //To lowercase each argument
+				if(!args[i].StartsWith("--") && mCommand == "run" && i == 1) //checks if a command is specified
 				{
-					output.command = args[i];
+					mCommand = args[i]; //Then sets the command
 				}
-
-				if(	!(i+1 < args.Count) &&
-					!args[i+1].StartsWith("--"))
+				else
 				{
-					output.arguments.Add(args[i],args[i+1]);
-					i++;
+					if(	(i+1 < args.Count)) //is there another command in the line after this one
+					{
+						if(!args[i+1].StartsWith("--")) //Does the next command start with a good specifier
+						{
+							
+							mArguments.Add(args[i].Substring(2),args[i+1]); //Add the key/value pair to the dictionary
+							i++; //skip over one
+						}
+					}
 				}
 			}
-			isInit = true;
-			return output;
+			mIsInit = true;
+			return;
 		}
 
+
+
+
+	   
 		///Get any Value from a String
-		public Result<void> GetValue(String Key, String output)
+		public static Result<StringView> GetValue(String Key)
 		{
-			Result<void> sucess = .Err;
-			if(isInit && this.arguments.ContainsKey(Key))
+			Result<StringView> sucess = .Err;
+			if(mIsInit && mArguments.ContainsKey(Key))
 			{
-				sucess.ReturnValueDiscarded();
-				output.Set(new String(this.arguments[Key]));
-				sucess = .Ok;
+				sucess = .Ok(mArguments[Key]);
 			}
 			return sucess;
 		}
 
 		///Get a value from a key as a String
-		public Result<void> GetString(String Key, String output)
+		public Result<StringView> GetString(String Key)
 		{
-			Result<void> sucess = .Err;
-			if(isInit && this.arguments.ContainsKey(Key))
+			Result<StringView> sucess = .Err;
+			if(mIsInit && mArguments.ContainsKey(Key))
 			{
-				sucess.ReturnValueDiscarded();
-				output.Set(new String(this.arguments[Key]));
-				sucess = .Ok;
+				sucess = .Ok(mArguments[Key]);
 			}
 			return sucess;
 		}
@@ -81,42 +85,45 @@ using System.Collections;
 		public Result<float> GetFloat(String Key)
 		{
 			Result<float> sucess = .Err;
-			if(isInit && arguments.ContainsKey(Key))
+			StringView output;
+			if(mIsInit && mArguments.ContainsKey(Key))
 			{
-				sucess.ReturnValueDiscarded();
-				String val = scope String(arguments[Key]);
-				if(float.Parse(val) case .Ok(float output))
-					sucess = .Ok(output);
+				output = mArguments[Key];
+				if(float.Parse(output) case .Ok(float returnval))
+					sucess = .Ok(returnval);
 			}
 			return sucess;
 		}
-
+		
 		///Get a value from a key as a Int
-		public Result<int> GetInt(String Key)
+		public static Result<int> GetInt(String Key)
 		{
 			Result<int> sucess = .Err;
-			if(isInit && arguments.ContainsKey(Key))
+			StringView output;
+			if(mIsInit && mArguments.ContainsKey(Key))
 			{
-				sucess.ReturnValueDiscarded();
-				String val = scope String(arguments[Key]);
-				if(int.Parse(val) case .Ok(int output))
-					sucess = .Ok(output);
+				output = mArguments[Key];
+				if(int.Parse(output) case .Ok(int returnval))
+					sucess = .Ok(returnval);
 			}
 			return sucess;
 		}
 
+
+		
 		///Get a value from a key as a Bool
 		public Result<bool> GetBool(String Key)
 		{
 			Result<bool> sucess = .Err;
-			if(isInit && arguments.ContainsKey(Key))
+			StringView output;
+			if(mIsInit && mArguments.ContainsKey(Key))
 			{
-				sucess.ReturnValueDiscarded();
-				String val = scope String(arguments[Key]);
-				if(bool.Parse(val) case .Ok(bool output))
-					sucess = .Ok(output);
+				output = mArguments[Key];
+				if(bool.Parse(output) case .Ok(bool returnval))
+					sucess = .Ok(returnval);
 			}
 			return sucess;
 		}
+		
 	}
 
