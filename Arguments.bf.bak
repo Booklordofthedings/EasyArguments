@@ -48,9 +48,8 @@ using System.Collections;
 							mArguments.Add(args[i].Substring(2),args[i+1]); //Add the key/value pair to the dictionary
 							i++; //skip over one
 						}
-						else
+						else if(args[i+1].StartsWith("--"))
 						{
-						mArguments.Add(args[i].Substring(2),"true"); //Add the key/value pair to the dictionary
 						}
 					}
 				}
